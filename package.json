@@ -1,0 +1,26 @@
+{
+  "name": "discord-collect-address",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "deploy": "node ./src/deploy-command.js",
+    "remove": "node ./src/delete-command.js",
+    "serve": "node ./src/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@discordjs/builders": "^1.7.0",
+    "@discordjs/rest": "^2.2.0",
+    "@prisma/client": "^5.13.0",
+    "discord-api-types": "^0.37.82",
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.4.5",
+    "redis": "^4.6.13"
+  },
+  "devDependencies": {
+    "prisma": "^5.13.0"
+  }
+}
