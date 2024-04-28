@@ -34,16 +34,19 @@ async function main() {
   discord.on("interactionCreate", async (interaction) => {
     if (!interaction.isCommand()) return;
 
-    // if command is not running in the specified channel, return error
-    if (
-      interaction.guildId !== process.env.DISCORD_GUILD_ID ||
-      interaction.channelId !== process.env.DISCORD_CHANNEL_ID
-    ) {
-      await interaction.reply({
-        content: "This command is not available in this channel.",
-        ephemeral: true,
-      });
-      return;
+    // if channel and guild id is specified in env, check if command is running in the specified channel
+    if (process.env.DISCORD_CHANNEL_ID && process.env.DISCORD_GUILD_ID) {
+      // if command is not running in the specified channel, return error
+      if (
+        interaction.guildId !== process.env.DISCORD_GUILD_ID ||
+        interaction.channelId !== process.env.DISCORD_CHANNEL_ID
+      ) {
+        await interaction.reply({
+          content: "This command is not available in this channel.",
+          ephemeral: true,
+        });
+        return;
+      }
     }
 
     const { commandName, options } = interaction;
@@ -101,7 +104,7 @@ async function main() {
       } else if (
         commandName === `${process.env.DISCORD_COMMAND_PREFIX}-query`
       ) {
-        await interaction.deferReply();
+        await interaction.deferReply({ ephemeral: true });
 
         // find from redis first
         let walletAddress = await client.get(
@@ -117,10 +120,7 @@ async function main() {
 
           if (!userEntry) {
             await interaction.editReply(
-              "You have not linked a wallet address.",
-              {
-                ephemeral: true,
-              }
+              "You have not linked a wallet address."
             );
             return;
           }
@@ -141,10 +141,7 @@ async function main() {
         }
 
         await interaction.editReply(
-          `Your linked wallet address is: \`${walletAddress}\``,
-          {
-            ephemeral: true,
-          }
+          `Your linked wallet address is: \`${walletAddress}\``
         );
       }
     } catch (error) {
